@@ -9,10 +9,9 @@ public class RentDAO {
 
     public void rentVehicle(Long id, String clientName, LocalDate startDate) {
 
-        PreparedStatement stmt;
-
         try (Connection conn = ConnectionFactory.getConnection()) {
 
+            PreparedStatement stmt;
             stmt = conn.prepareStatement("UPDATE vehicles SET available = false WHERE id = ?");
             stmt.setLong(1, id);
             stmt.executeUpdate();
@@ -24,16 +23,15 @@ public class RentDAO {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("Error renting vehicle");
         }
     }
 
     public void returnVehicle(Long id) {
 
-        PreparedStatement stmt;
-
         try (Connection conn = ConnectionFactory.getConnection()) {
 
+            PreparedStatement stmt;
             stmt = conn.prepareStatement("UPDATE vehicles SET available = true WHERE id = ?");
             stmt.setLong(1, id);
             stmt.executeUpdate();
@@ -48,19 +46,19 @@ public class RentDAO {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("Error returning vehicle");
         }
     }
 
     public String listAllRents() {
 
-        PreparedStatement stmt;
         String sql = "SELECT * FROM rent";
         String rows;
         String table = "";
 
         try (Connection conn = ConnectionFactory.getConnection()) {
 
+            PreparedStatement stmt;
             stmt = conn.prepareStatement(sql);
             ResultSet result = stmt.executeQuery();
 
@@ -87,7 +85,7 @@ public class RentDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("Error listing rents");
         }
 
         return table;

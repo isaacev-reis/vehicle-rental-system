@@ -14,11 +14,11 @@ public class VehicleDAO {
 
     public void insertVehicle(Vehicle vehicle) {
 
-        PreparedStatement stmt;
         String sql = "INSERT INTO vehicles (plate, brand, model, year, daily_rate) VALUES (?, ?, ?, ?, ?);";
 
         try (Connection conn = ConnectionFactory.getConnection()) {
 
+            PreparedStatement stmt;
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, vehicle.getPlate());
             stmt.setString(2, vehicle.getBrand());
@@ -29,36 +29,36 @@ public class VehicleDAO {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("Error inserting vehicle", e);
         }
     }
 
     public void deleteVehicle(Long id) {
 
-        PreparedStatement stmt;
         String sql = "DELETE FROM vehicles WHERE id = ?";
 
         try (Connection conn = ConnectionFactory.getConnection()) {
 
+            PreparedStatement stmt;
             stmt = conn.prepareStatement(sql);
             stmt.setLong(1, id);
 
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("Error listing vehicle", e);
         }
     }
 
     public String listAllVehicles() {
 
-        PreparedStatement stmt;
         String sql = "SELECT * FROM vehicles";
         String rows;
         String table = "";
 
         try (Connection conn = ConnectionFactory.getConnection()) {
 
+            PreparedStatement stmt;
             stmt = conn.prepareStatement(sql);
             ResultSet result = stmt.executeQuery();
 
@@ -77,7 +77,7 @@ public class VehicleDAO {
                 table += rows;
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("Error listing vehicles", e);
         }
 
         return table;
@@ -85,13 +85,13 @@ public class VehicleDAO {
 
     public String listEnabledVehicles() {
 
-        PreparedStatement stmt;
         String sql = "SELECT * FROM vehicles WHERE available = true";
         String rows;
         String table = "";
 
         try (Connection conn = ConnectionFactory.getConnection()) {
 
+            PreparedStatement stmt;
             stmt = conn.prepareStatement(sql);
             ResultSet result = stmt.executeQuery();
 
@@ -109,7 +109,7 @@ public class VehicleDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("Error listing vehicles", e);
         }
 
         return table;
