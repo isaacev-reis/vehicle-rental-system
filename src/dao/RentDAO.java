@@ -1,23 +1,24 @@
 package dao;
 
 import connection.ConnectionFactory;
+import model.Vehicle;
 
 import java.sql.*;
 import java.time.LocalDate;
 
 public class RentDAO {
 
-    public void rentVehicle(Long id, String clientName, LocalDate startDate) {
+    public void rentVehicle(Vehicle vehicle, String clientName, LocalDate startDate) {
 
         try (Connection conn = ConnectionFactory.getConnection()) {
 
             PreparedStatement stmt;
             stmt = conn.prepareStatement("UPDATE vehicles SET available = false WHERE id = ?");
-            stmt.setLong(1, id);
+            stmt.setLong(1, vehicle.getId());
             stmt.executeUpdate();
 
             stmt = conn.prepareStatement("INSERT INTO rent (vehicle_id, client_name, start_date) VALUES (?, ?, ?)");
-            stmt.setLong(1, id);
+            stmt.setLong(1, vehicle.getId());
             stmt.setString(2, clientName);
             stmt.setDate(3, Date.valueOf(startDate));
             stmt.executeUpdate();
